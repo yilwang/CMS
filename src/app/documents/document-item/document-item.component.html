@@ -2,17 +2,16 @@
     <div class="panel panel-default">
         <div class="col-xs-12 panel-heading">
             <div class="col-xs-9">
-                <span class="title">Contacts</span>
+                <span class="title">Documents</span>
             </div>
-            <div class="col-xs-3 panel-heading">
-                <button class="btn btn-success">New Contacts</button>
+            <div class="col-xs-3">
+                <button class="btn btn-success">New Documents</button>
             </div>
         </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 margin-top">
-                    <app-contact-item *ngFor="let contact of contacts" [contact]="contact" (click)="onSelected(contact)">
-                    </app-contact-item>
+                    <app-document-detail></app-document-detail>
                 </div>
             </div>
         </div>
