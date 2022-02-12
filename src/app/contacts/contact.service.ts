@@ -9,14 +9,14 @@ import { MOCKCONTACTS } from './MOCKCONTACTS';
 export class ContactService{
     private contacts: Contact[] = [];
 
-    contactSelectedEvent = new EventEmitter<Contact[]>();
+    contactSelectedEvent = new EventEmitter<Contact>();
 
     constructor() {
         this.contacts = MOCKCONTACTS;
     }
 
     getContacts(): Contact[] {
-        return this.contacts. sort((a,b) => a.name > b.name ? 1 : b.name > a.name ? -1 :0 ).slice());
+        return this.contacts. sort((a,b) => a.name > b.name ? 1 : b.name > a.name ? -1 :0 ).slice();
     }
 
     getContact(id: string): Contact {

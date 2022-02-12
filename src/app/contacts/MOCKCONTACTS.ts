@@ -277,5 +277,13 @@ export const MOCKCONTACTS: Contact[] = [
       group: null
     }
   ]
+  },
+  {
+    id: '19',
+      name: 'Liya Wang',
+      email: 'wan15002@byui.edu',
+      phone: '208-496-1233',
+      imageUrl: '',
+      group: null
   }
 ];

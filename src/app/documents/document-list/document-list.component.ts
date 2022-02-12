@@ -1,5 +1,6 @@
-import { Component, OnInit, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Document } from '../document.model';
+import { DocumentService } from '../document.service';
 
 @Component({
   selector: 'app-document-list',
@@ -8,56 +9,21 @@ import { Document } from '../document.model';
 })
 export class DocumentListComponent implements OnInit {
 
-  constructor() {}
+  documents: Document[] = [];
+  
+  constructor(private documentService: DocumentService) {}
 
-  @Output() selectedDocumentEvent = new EventEmitter<Document>();
-
-  documents: Document[] = [
-    new Document(
-      '1',
-      'CIT 260 -Object Oriented Programming',
-      'Description 1',
-      '',
-      []
-    ),
-    new Document(
-      '2',
-      'CIT 366 - Full Stack Development',
-      'Description 2',
-      '',
-      []
-    ),
-    new Document(
-      '3',
-      'CIT 425 -Data Warehousing',
-      'Description 3',
-      '',
-      []
-    ),
-    new Document(
-      '4',
-      'CIT 460 - Enterprise Development',
-      'Description 4',
-      '',
-      []
-    ),
-    new Document(
-      '4',
-      'CIT 495 - Senior Practicum',
-      'Description 5',
-      '',
-      []
-    )
-
-  ];
-
-  ngOnInit() {}
+  ngOnInit() {
+    this.documents = this.documentService.getDocuments();
+  }
  
   onSelectedDocument(document: Document) {
-    this.selectedDocumentEvent.emit(document);
+    this.documentService.documentSelectedEvent.emit(document);
   }
 
-  onAddMessage(document: Document) {
+  onAddDocument(document: Document) {
     this.documents.push(document);
   }
 }
+
+

@@ -1,5 +1,4 @@
-import { Injectable, Output ,EventEmitter } from "@angular/core";
-import { runInThisContext } from "vm";
+import { Injectable, EventEmitter } from "@angular/core";
 import { Message } from './message.model';
 import { MOCKMESSAGES } from './MOCKMESSAGES';
 
@@ -25,7 +24,7 @@ export class MessageService{
     }
 
     getMessages(): Message[] {
-        return this.messages. slice();
+        return this.messages.slice();
     }
 
 }

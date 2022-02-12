@@ -21,6 +21,7 @@ import { DocumentItemComponent } from './documents/document-item/document-item.c
 import { DocumentDetailComponent } from './documents/document-detail/document-detail.component';
 
 import{ DropdownDirective } from './dropdown.directive';
+import { ContactService } from './contacts/contact.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import{ DropdownDirective } from './dropdown.directive';
     BrowserModule,
     FormsModule
   ],
-  providers: [],
+  providers: [ContactService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
