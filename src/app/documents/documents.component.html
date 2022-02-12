@@ -1,1 +1,10 @@
-<h1>Documents Works Here!</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <app-document-list (selectedDocumentEvent)="selectedDocument = $event"></app-document-list>
+        </div>
+        <div class="col-md-7">
+            <app-document-detail [document]="selectedDocument" *ngIf="selectedDocument"></app-document-detail>
+        </div>
+    </div>
+</div>

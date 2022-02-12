@@ -20,6 +20,7 @@ import { DocumentListComponent } from './documents/document-list/document-list.c
 import { DocumentItemComponent } from './documents/document-item/document-item.component';
 import { DocumentDetailComponent } from './documents/document-detail/document-detail.component';
 
+import{ DropdownDirective } from './dropdown.directive';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { DocumentDetailComponent } from './documents/document-detail/document-de
     DocumentDetailComponent,
     DocumentItemComponent,
 
-
+    DropdownDirective,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output,EventEmitter } from '@angular/core';
 import { Document } from '../document.model';
 
 @Component({
@@ -10,33 +10,52 @@ export class DocumentListComponent implements OnInit {
 
   constructor() {}
 
-  //@Output() selectedContactEvent = new EventEmitter<Contact>();
+  @Output() selectedDocumentEvent = new EventEmitter<Document>();
 
   documents: Document[] = [
     new Document(
       '1',
-      'Subject 1',
-      'Message Text 1',
+      'CIT 260 -Object Oriented Programming',
+      'Description 1',
       '',
       []
     ),
     new Document(
       '2',
-      'Subject 2',
-      'Message Text 2',
+      'CIT 366 - Full Stack Development',
+      'Description 2',
       '',
       []
     ),
     new Document(
       '3',
-      'Subject 3',
-      'Mssage Text 3',
+      'CIT 425 -Data Warehousing',
+      'Description 3',
+      '',
+      []
+    ),
+    new Document(
+      '4',
+      'CIT 460 - Enterprise Development',
+      'Description 4',
+      '',
+      []
+    ),
+    new Document(
+      '4',
+      'CIT 495 - Senior Practicum',
+      'Description 5',
       '',
       []
     )
+
   ];
 
   ngOnInit() {}
+ 
+  onSelectedDocument(document: Document) {
+    this.selectedDocumentEvent.emit(document);
+  }
 
   onAddMessage(document: Document) {
     this.documents.push(document);
