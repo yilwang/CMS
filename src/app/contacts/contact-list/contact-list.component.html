@@ -5,13 +5,13 @@
                 <span class="title">Contacts</span>
             </div>
             <div class="col-xs-3 panel-heading">
-                <button class="btn btn-success">New Contacts</button>
+                <button class="btn btn-success" routerLinkActive="active" [routerLink]="['id']">New Contacts</button>
             </div>
         </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-12 margin-top">
-                    <app-contact-item *ngFor="let contact of contacts" [contact]="contact" (click)="onSelected(contact)">
+                    <app-contact-item *ngFor="let contact of contacts" [contact]="contact">
                     </app-contact-item>
                 </div>
             </div>

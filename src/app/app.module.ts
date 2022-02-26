@@ -9,7 +9,7 @@ import { ContactDetailComponent } from './contacts/contact-detail/contact-detail
 
 import {FormsModule} from "@angular/forms";
 
-import { HeaderComponent } from './contacts/header.component';
+import { HeaderComponent } from './header/header.component';
 
 import { MessageEditComponent } from './messages/message-edit/message-edit.component';
 import { MessageItemComponent } from './messages/message-item/message-item.component';
@@ -22,6 +22,10 @@ import { DocumentDetailComponent } from './documents/document-detail/document-de
 
 import{ DropdownDirective } from './dropdown.directive';
 import { ContactService } from './contacts/contact.service';
+
+import { AppRoutingModule } from './app-routing.module';
+import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
+import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
 
 @NgModule({
   declarations: [
@@ -45,9 +49,12 @@ import { ContactService } from './contacts/contact.service';
     DocumentItemComponent,
 
     DropdownDirective,
+     ContactEditComponent,
+     DocumentEditComponent,
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     FormsModule
   ],
   providers: [ContactService],
