@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Document } from '../document.model';
 import { DocumentService } from '../document.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-document-list',
@@ -10,18 +11,21 @@ import { DocumentService } from '../document.service';
 export class DocumentListComponent implements OnInit {
 
   documents: Document[] = [];
-  
+  subscription: Subscription;
+
   constructor(private documentService: DocumentService) {}
 
   ngOnInit() {
-    this.documents = this.documentService.getDocuments();
-    this.documentService.documentListChangedEvent.subscribe((documents: Document[]) => {
+    this.subscription = this.documentService.documentListChangedEvent.subscribe(
+      (documents: Document[]) => {
       this.documents = documents;
     });
+
+    this.documents = this.documentService.getDocuments();
   }
  
-  onAddDocument(document: Document) {
-    this.documents.push(document);
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
 
