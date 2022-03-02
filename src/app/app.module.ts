@@ -8,6 +8,8 @@ import { ContactItemComponent } from './contacts/contact-item/contact-item.compo
 import { ContactDetailComponent } from './contacts/contact-detail/contact-detail.component';
 
 import {FormsModule} from "@angular/forms";
+import { DndModule } from 'ng2-dnd';
+//import{ DragDropModule }from '@angular/cdk/drag-drop';
 
 import { HeaderComponent } from './header/header.component';
 
@@ -21,11 +23,13 @@ import { DocumentItemComponent } from './documents/document-item/document-item.c
 import { DocumentDetailComponent } from './documents/document-detail/document-detail.component';
 
 import{ DropdownDirective } from './dropdown.directive';
-import { ContactService } from './contacts/contact.service';
+//import { ContactService } from './contacts/contact.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 import { DocumentEditComponent } from './documents/document-edit/document-edit.component';
+
+
 
 @NgModule({
   declarations: [
@@ -55,9 +59,11 @@ import { DocumentEditComponent } from './documents/document-edit/document-edit.c
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule, 
+    DndModule.forRoot(),
+    //DragDropModule
   ],
-  providers: [ContactService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
