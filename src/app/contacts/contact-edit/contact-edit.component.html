@@ -13,7 +13,7 @@
                     <label for="email">Email:</label>
                     <input type="text" id="email" class="form-control required" size="120" max="255" name="email" [ngModel]="contact?.email" #email="ngModel" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" required />
                 </div>
-                <div class="alert alert-danger" *ngIf="email.invalid && email.touched">Enter a valid Email address</div>
+                <div class="alert alert-danger" *ngIf="email.invalid && email.touched">Enter a valid email address</div>
             </div>
 
             <div class="row">
@@ -45,7 +45,12 @@
                         </div>
                         <span class="dragMsg " *ngIf="groupContacts?.length < 1 ">Drag contacts in group here</span>
                     </div>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="alert alert-danger" *ngIf="(name.invalid && name.touched) || (email.invalid && email.touched)">
+                    The Name and Email are required fields.
                 </div>
             </div>
 
