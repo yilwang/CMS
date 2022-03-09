@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Document } from './document.model';
-import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -9,20 +9,40 @@ import { Subject } from 'rxjs';
 export class DocumentService {
   private documents: Document[] = [];
   maxDocumentId: number;
-  //documentSelectedEvent = new EventEmitter<Document>();
   documentListChangedEvent = new Subject<Document[]>();
 
-  constructor() {
-    this.documents = MOCKDOCUMENTS;
-    this.maxDocumentId = this.getMaxId();
+  constructor(private http: HttpClient) {
+
   }
 
   getDocument(id: string) {
     return this.documents.find((document) => document.id === id);
   }
 
-  getDocuments(): Document[] {
-    return this.documents.slice();
+  getDocuments(){
+    this.http
+      .get(
+        'https://cms-project-8f25d-default-rtdb.firebaseio.com/documents.json'
+      )
+      .subscribe(
+        // success function
+        (documents: Document[]) => {
+          this.documents = documents;
+
+          this.maxDocumentId = this.getMaxId();
+
+          this.documents.sort((a, b) =>
+            a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+          );
+
+          this.documentListChangedEvent.next(this.documents.slice());
+        },
+
+        //error function
+        (error: any) => {
+          console.log(error);
+        }
+      );
   }
 
   getMaxId(): number {
@@ -36,6 +56,24 @@ export class DocumentService {
     });
     return maxId;
   }
+  
+   //This method is only for week 09 - firebase, and it is not the best approach to use storeContacts method.
+   storeDocuments() {
+    let documents = JSON.stringify(this.documents);
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http
+      .put(
+        'https://cms-project-8f25d-default-rtdb.firebaseio.com/documents.json',
+        documents,
+        { headers: headers }
+      )
+      .subscribe(() => {
+        this.documentListChangedEvent.next(this.documents.slice());
+      });
+  }
+
 
   addDocument(newDocument: Document) {
     if (!newDocument) {
@@ -46,8 +84,7 @@ export class DocumentService {
 
     newDocument.id = this.maxDocumentId.toString();
     this.documents.push(newDocument);
-    const documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments(); //This method is only for week 09 - firebase
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
@@ -60,8 +97,7 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
-    const documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments(); //This method is only for week 09 - firebase
   }
 
   deleteDocument(document: Document) {
@@ -76,8 +112,6 @@ export class DocumentService {
 
     this.documents.splice(pos, 1);
 
-    const documentsListClone = this.documents.slice();
-
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments(); //This method is only for week 09 - firebase
   }
 }
