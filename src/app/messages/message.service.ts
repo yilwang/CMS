@@ -31,13 +31,22 @@ export class MessageService {
       return;
     }
 
-    this.maxMessageId++;
+    // make sure id of the new Document is empty
+    newMessage.id = '';
 
-    newMessage.id = this.maxMessageId.toString();
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    this.messages.push(newMessage);
-    
-    this.storeMessages(); //This method is only for week 09 - firebase
+    // add to database
+    this.http.post<{ message: Message }>('http://localhost:3000/messages',
+      document,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.messages.push(responseData.message);
+          this.messageListChangedEvent.next(this.messages.slice());
+        }
+      );
   }
 
   getMessage(id: string): Message {
@@ -46,17 +55,17 @@ export class MessageService {
 
   getMessages(){
     this.http
-      .get('https://cms-project-8f25d-default-rtdb.firebaseio.com/messages.json')
+      .get<{ message: string, messages: Message[]}>('http://localhost:3000/messages')
       .subscribe(
         // success function
-        (messages: Message[]) => {
-          this.messages = messages;
+        (messagesData) => {
+          this.messages = messagesData.messages;
 
           this.maxMessageId = this.getMaxId();
 
-          this.messages.sort((a, b) => (
+          /*this.messages.sort((a, b) => (
               a.id > b.id ? 1 : b.id > a.id ? -1 : 0)
-          );
+          );*/
 
           this.messageListChangedEvent.next(this.messages.slice());
         },
@@ -69,19 +78,19 @@ export class MessageService {
   }
 
   //This method is only for week 09 - firebase, and it is not the best approach to use storeContacts method.
-  storeMessages() {
-    let messages = JSON.stringify(this.messages);
+  //storeMessages() {
+  // let messages = JSON.stringify(this.messages);
 
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  //  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    this.http
-      .put(
-        'https://cms-project-8f25d-default-rtdb.firebaseio.com/messages.json',
-        messages,
-        { headers: headers }
-      )
-      .subscribe(() => {
-        this.messageListChangedEvent.next(this.messages.slice());
-      });
-  }
+  //  this.http
+  //    .put(
+  //      'https://cms-project-8f25d-default-rtdb.firebaseio.com/messages.json',
+  //      messages,
+  //      { headers: headers }
+  //    )
+  //    .subscribe(() => {
+  //      this.messageListChangedEvent.next(this.messages.slice());
+  //    });
+  //}
 }

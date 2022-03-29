@@ -21,13 +21,13 @@ export class DocumentService {
 
   getDocuments(){
     this.http
-      .get(
-        'https://cms-project-8f25d-default-rtdb.firebaseio.com/documents.json'
+      .get<{ message: string, documents: Document[]}>(
+        'http://localhost:3000/documents'
       )
       .subscribe(
         // success function
-        (documents: Document[]) => {
-          this.documents = documents;
+        (documentData) => {
+          this.documents = documentData.documents;
 
           this.maxDocumentId = this.getMaxId();
 
@@ -58,21 +58,21 @@ export class DocumentService {
   }
   
    //This method is only for week 09 - firebase, and it is not the best approach to use storeContacts method.
-   storeDocuments() {
-    let documents = JSON.stringify(this.documents);
+  //  storeDocuments() {
+  //   let documents = JSON.stringify(this.documents);
 
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  //   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    this.http
-      .put(
-        'https://cms-project-8f25d-default-rtdb.firebaseio.com/documents.json',
-        documents,
-        { headers: headers }
-      )
-      .subscribe(() => {
-        this.documentListChangedEvent.next(this.documents.slice());
-      });
-  }
+  //   this.http
+  //     .put(
+  //       'https://cms-project-8f25d-default-rtdb.firebaseio.com/documents.json',
+  //       documents,
+  //       { headers: headers }
+  //     )
+  //     .subscribe(() => {
+  //       this.documentListChangedEvent.next(this.documents.slice());
+  //     });
+  // }
 
 
   addDocument(newDocument: Document) {
@@ -80,38 +80,73 @@ export class DocumentService {
       return;
     }
 
-    this.maxDocumentId++;
+    // make sure id of the new Document is empty
+    newDocument.id = '';
 
-    newDocument.id = this.maxDocumentId.toString();
-    this.documents.push(newDocument);
-    this.storeDocuments(); //This method is only for week 09 - firebase
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // add to database
+    this.http.post<{ message: string, document: Document }>('http://localhost:3000/documents',
+      document,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          // add new document to documents
+          this.documents.push(responseData.document);
+          this.documentListChangedEvent.next(this.documents.slice());
+        }
+      );
   }
+
+
 
   updateDocument(originalDocument: Document, newDocument: Document) {
     if (!originalDocument || !newDocument) {
       return;
     }
 
-    const pos = this.documents.indexOf(originalDocument);
-    if (pos < 0) return;
+    const pos = this.documents.findIndex(d => d.id === originalDocument.id);
 
-    newDocument.id = originalDocument.id;
-    this.documents[pos] = newDocument;
-    this.storeDocuments(); //This method is only for week 09 - firebase
-  }
-
-  deleteDocument(document: Document) {
-    if (!document) {
-      return;
-    }
-
-    const pos = this.documents.indexOf(document);
     if (pos < 0) {
       return;
     }
 
-    this.documents.splice(pos, 1);
+    // set the id of the new Document to the id of the old Document
+    newDocument.id = originalDocument.id;
+    newDocument['_id'] = originalDocument['_id'];
 
-    this.storeDocuments(); //This method is only for week 09 - firebase
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+    // update database
+    this.http.put('http://localhost:3000/documents/' + originalDocument.id,
+      newDocument, { headers: headers })
+      .subscribe(
+        (response: Response) => {
+          this.documents[pos] = newDocument;
+          this.documentListChangedEvent.next(this.documents.slice());
+        }
+      );
+  }
+
+  deleteDocument(document: Document) {
+
+    if (!document) {
+      return;
+    }
+
+    const pos = this.documents.findIndex(d => d.id === document.id);
+
+    if (pos < 0) {
+      return;
+    }
+
+    // delete from database
+    this.http.delete('http://localhost:3000/documents/' + document.id)
+      .subscribe(
+        (response: Response) => {
+          this.documents.splice(pos, 1);
+          this.documentListChangedEvent.next(this.documents.slice());
+        }
+      );
   }
 }
